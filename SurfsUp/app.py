@@ -49,6 +49,7 @@ def home():
         f"<h3>/api/v1.0/precipitation</h3>"
         f"<h3>/api/v1.0/stations</h3>"
         f"<h3>/api/v1.0/tobs</h3>"
+        f"<h3>/api/v1.0/start-date/<start_d></h3>"
         f"<h3>/api/v1.0/<start_d></h3>"
     )
 
@@ -98,11 +99,11 @@ def fun_tobs():
     return jsonify(tobs_data)
 
 # For a specified start date, calculate TMIN, TAVG, and TMAX for all the dates greater than or equal to the start date.
-@app.route("/api/v1.0/<start_d>")
+@app.route("/api/v1.0/start-date/<start_d>")
 def fun_calculate_temp(start_d):
-    start_date = dt.datetime.strptime(start_d,"%Y-%m-%d")
+    #start_date = dt.datetime.strptime(start_d,"%Y-%m-%d")
     query_results = session.query(func.min(Measurement.tobs),func.max(Measurement.tobs),func.round(func.avg(Measurement.tobs))).\
-    filter(Measurement.date >= start_date).all()
+    filter(Measurement.date >= start_d).all()
     temp_dict = {}
     temp_dict["Average"] = query_results[0][0]
     temp_dict["Minimum"] = query_results[0][1]
